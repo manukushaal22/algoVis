@@ -1,14 +1,28 @@
 import {Component} from "react";
 import Visualizer from "./visualizer/Visualizer";
-import Help from "./help/Help";
 import Editor from "./editor/Editor";
 
 class Home extends Component {
 
     constructor(props) {
         super(props);
+        console.log(props)
+        let defaultStyle = '{\n' +
+            '\t"node": {\n' +
+            '\n' +
+            '\t},\n' +
+            '\n' +
+            '\t"edge": {\n' +
+            '\n' +
+            '\t},\n' +
+            '\n' +
+            '\t"array": {\n' +
+            '\n' +
+            '\t}\n' +
+            '}'
         this.state = {
-            program: ""
+            program: "",
+            style: defaultStyle
         };
     }
 
@@ -18,18 +32,25 @@ class Home extends Component {
         });
     }
 
+    setStyle=  (style) => {
+        this.setState({
+            style: style
+        })
+    }
+
     render() {
         return (
-            <div style={{display: 'flex', width: "100%", height: "100vh", backgroundColor:"green"}}>
+            <div style={{display: 'flex', width: "100%", height: "100vh", backgroundColor:"green", marginTop:45}}>
+
                 <div style={{width: "60%"}}>
-                    <Visualizer program={this.state.program}/>
+                    <Visualizer program={this.state.program} style={this.state.style} speed={this.props.speed}/>
                 </div>
-                <div style={{width: "40%", resize:"horizontal"}}>
-                    <div>
-                        <Help/>
+                <div style={{width: "40%", resize:"horizontal"}}  >
+                    <div hidden={!this.props.styling}>
+                        <Editor editor_id={"style"} value={this.state.style} visuals_trigger={this.setStyle} theme={"dracula"}/>
                     </div>
-                    <div>
-                        <Editor visuals_trigger={this.triggerVisuals}/>
+                    <div hidden={this.props.styling}>
+                        <Editor editor_id={"code"} visuals_trigger={this.triggerVisuals} theme={"solarized_dark"}/>
                     </div>
                 </div>
             </div>
